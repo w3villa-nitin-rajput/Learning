@@ -16,7 +16,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_070507) do
     t.string "email"
     t.boolean "email_verified"
     t.string "facebook_uid"
-    t.string "google_uid"
+    t.string "google_oauth2_uid"
     t.string "name"
     t.string "password_digest"
     t.integer "role"

@@ -16,10 +16,10 @@ class AuthController < ApplicationController
 
   # Login
   def login
-    user = User.find_by(email: params[:email])  
+    user = User.find_by(email: params[:email])
 
     if user&.authenticate(params[:password])
-      return render json: { error: "Verify your email first" }, status: 403 unless user.email_verified?
+      return render json: { error: "wrong credentials" }, status: 400 unless user
 
       token = JwtService.encode(user_id: user.id)
 

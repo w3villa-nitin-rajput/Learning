@@ -33,12 +33,15 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 gem "bcrypt", "~> 3.1.7"
-gem "jwt"
-gem "dotenv-rails"
+gem "jwt", "~> 2.8"
+gem "dotenv-rails", groups: [ :development, :test ]
 
-gem "omniauth"
-gem "omniauth-google-oauth2"
-gem "omniauth-facebook"
+gem "omniauth", "~> 2.1.0"
+gem "omniauth-google-oauth2", "~> 1.1.1"
+gem "omniauth-facebook", "~> 9.0.0"
+
+# For API-only apps, you might also need:
+gem "oauth2", "~> 2.0.9"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"

@@ -4,3 +4,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :facebook, ENV["FACEBOOK_CLIENT_ID"], ENV["FACEBOOK_CLIENT_SECRET"]
 end
 OmniAuth.config.allowed_request_methods = [ :get, :post ]
+OmniAuth.config.logger = Rails.logger
+
+# Debug: Print environment variables at startup
+Rails.logger.info "GOOGLE_CLIENT_ID present: #{ENV['GOOGLE_CLIENT_ID'].present?}"
+Rails.logger.info "GOOGLE_CLIENT_SECRET present: #{ENV['GOOGLE_CLIENT_SECRET'].present?}"
+Rails.logger.info "FACEBOOK_CLIENT_ID present: #{ENV['FACEBOOK_CLIENT_ID'].present?}"
+Rails.logger.info "FACEBOOK_CLIENT_SECRET present: #{ENV['FACEBOOK_CLIENT_SECRET'].present?}"

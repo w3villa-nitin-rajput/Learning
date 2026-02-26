@@ -1,4 +1,3 @@
-# app/services/jwt_service.rb
 class JwtService
   SECRET = ENV["JWT_SECRET"]
 

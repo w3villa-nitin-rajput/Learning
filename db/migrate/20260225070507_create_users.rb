@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration[8.1]
       t.string :email
       t.string :password_digest
       t.boolean :email_verified
-      t.string :google_uid, null: true
+      t.string :google_oauth2_uid, null: true
       t.string :facebook_uid, null: true
       t.integer :role
 
