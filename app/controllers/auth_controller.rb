@@ -1,5 +1,5 @@
 class AuthController < ApplicationController
-  skip_before_action :authorize_request
+  before_action :authorize_request, only: [:get_user_profile]
 
 
   # Standard Signup
@@ -15,31 +15,65 @@ class AuthController < ApplicationController
   end
 
   # Login
-  def login
-    user = User.find_by(email: params[:email])
+def login
+  user = User.find_by(email: params[:email])
 
-    if user&.authenticate(params[:password])
-      return render json: { error: "wrong credentials" }, status: 400 unless user
+  if user&.authenticate(params[:password])
+    # Add this check to enforce verification
+    return render json: { error: "Please verify your email first" }, status: :forbidden unless user.email_verified
 
-      token = JwtService.encode(user_id: user.id)
-
-      render json: { token: token }
-    else
-      render json: { error: "Invalid credentials" }, status: 401
-    end
+    token = JwtService.encode(user_id: user.id)
+    render json: { token: token }
+  else
+    render json: { error: "Invalid credentials" }, status: :unauthorized
   end
+end
+
 
   # Email Verification
-  def verify_email
-    decoded = JwtService.decode(params[:token])
-    return render json: { error: "Invalid link" }, status: 400 unless decoded
-
-    user = User.find_by(email: decoded[:email])
-    return render json: { error: "User not found" }, status: 404 unless user
-
-    user.update(email_verified: true)
-    render json: { message: "Email verified successfully" }
+def verify_email
+  decoded = JwtService.decode(params[:token])
+  
+  if decoded.nil?
+    return render json: { error: "Invalid or expired verification link" }, status: :unauthorized
   end
+
+  user = User.find_by(email: decoded[:email])
+  
+  if user
+    user.update(email_verified: true) unless user.email_verified
+    render json: {success: true, message: "Email verified successfully!"}
+  else
+    render json: {success: false, message: "User not found"}
+  end
+rescue StandardError => e
+  render json: {success: false, message: "Something went wrong"}
+end
+
+
+
+def resend_verification_email
+  user = User.find_by(email: params[:email])
+  return render json: { error: "User not found" }, status: :not_found unless user
+
+  if user && !user.email_verified
+    send_verification_email(user)
+    render json: { message: "Verification email sent successfully" }, status: :ok
+  else
+    render json: { error: "User not found or already verified" }, status: :bad_request
+  end
+end
+
+def get_user_profile
+  puts "@current_user: #{@current_user}"
+  user = User.find_by(id: @current_user.id)
+  puts "user: #{user}"
+  if user
+    render json: user
+  else
+    render json: { error: "User not found" }, status: :not_found
+  end
+end
 
   private
 
@@ -48,7 +82,8 @@ class AuthController < ApplicationController
   end
 
   def send_verification_email(user)
-    token = JwtService.encode({ email: user.email }, 1.day.from_now)
-    VerificationMailer.verify(user, token).deliver_later
-  end
+  payload = { email: user.email, exp: 1.day.from_now.to_i }
+  token = JwtService.encode(payload)
+  VerificationMailer.verify(user, token).deliver_later
+end
 end

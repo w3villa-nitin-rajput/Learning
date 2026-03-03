@@ -9,15 +9,8 @@ class SocialAuthController < ApplicationController
     user = User.find_by(email: email)
 
     if user
-      puts "NININIININNININNININININININININ"
-      puts uid
-      puts "NININIININNININNININININININININ"
       user.update("#{provider}_uid": uid)
     else
-      puts "NININIININNININNININININININININ"
-      puts uid
-      puts provider
-      puts "NININIININNININNININININININININ"
       user = User.create!(
         name: auth.info.name,
         email: email,
@@ -28,7 +21,6 @@ class SocialAuthController < ApplicationController
     end
 
     token = JwtService.encode(user_id: user.id)
-    puts token
-    redirect_to "#{ENV['FRONTEND_URL']}/dashboard?token=#{token}"
+    redirect_to "#{ENV['FRONTEND_URL']}/home?token=#{token}"
   end
 end

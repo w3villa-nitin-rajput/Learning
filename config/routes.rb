@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   post "/signup", to: "auth#signup"
   post "/login", to: "auth#login"
   get "/verify-email", to: "auth#verify_email"
+  get "/get-profile", to: "auth#get_user_profile"
+  post "/resend-verification-email", to: "auth#resend_verification_email"
 
   get "/auth/:provider/callback", to: "social_auth#callback"
 end
