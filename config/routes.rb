@@ -15,4 +15,26 @@ Rails.application.routes.draw do
   post "/resend-verification-email", to: "auth#resend_verification_email"
 
   get "/auth/:provider/callback", to: "social_auth#callback"
+
+  put "/profile", to: "profiles#update"
+  get "/cloudinary/signature", to: "cloudinary#signature"
+
+  # Public API
+  resources :categories, only: [:index]
+  resources :products, only: [:index]
+
+  # Cart API
+  get "/get-cart", to: "carts#index"
+  post "/cart/add", to: "carts#add"
+  post "/cart/update", to: "carts#update"
+
+  # Admin API
+  namespace :admin do
+    get "dashboard", to: "dashboard#stats"
+    resources :users, only: [:index, :show, :update]
+    resources :orders, only: [:index, :show, :update]
+  end
+
+  resources :products, only: [:index, :create, :update, :destroy]
+  resources :categories, only: [:index, :create, :update, :destroy]
 end

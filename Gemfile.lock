@@ -88,6 +88,11 @@ GEM
     bundler-audit (0.9.3)
       bundler (>= 1.2.0)
       thor (~> 1.0)
+    cloudinary (2.4.4)
+      faraday (>= 2.0.1, < 3.0.0)
+      faraday-follow_redirects (~> 0.5)
+      faraday-multipart (~> 1.0, >= 1.0.4)
+      ostruct
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
     crass (1.0.6)
@@ -109,6 +114,10 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
+    faraday-follow_redirects (0.5.0)
+      faraday (>= 1, < 3)
+    faraday-multipart (1.2.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.4.2)
       net-http (~> 0.5)
     ffi (1.17.3-aarch64-linux-gnu)
@@ -136,6 +145,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.18.1)
+    jsonapi-serializer (2.2.0)
+      activesupport (>= 4.2)
     jwt (2.10.2)
       base64
     kamal (2.10.1)
@@ -149,6 +160,18 @@ GEM
       sshkit (>= 1.23.0, < 2.0)
       thor (~> 1.3)
       zeitwerk (>= 2.6.18, < 3.0)
+    kaminari (1.2.2)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
+      actionview
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -171,6 +194,7 @@ GEM
     msgpack (1.8.0)
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
+    multipart-post (2.4.1)
     net-http (0.9.1)
       uri (>= 0.11.1)
     net-imap (0.6.3)
@@ -393,11 +417,14 @@ DEPENDENCIES
   bootsnap
   brakeman
   bundler-audit
+  cloudinary
   debug
   dotenv-rails
   image_processing (~> 1.2)
+  jsonapi-serializer (~> 2.2)
   jwt (~> 2.8)
   kamal
+  kaminari (~> 1.2)
   oauth2 (~> 2.0.9)
   omniauth (~> 2.1.0)
   omniauth-facebook (~> 9.0.0)

@@ -31,6 +31,7 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+gem "cloudinary"
 
 gem "bcrypt", "~> 3.1.7"
 gem "jwt", "~> 2.8"
@@ -59,3 +60,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
+
+gem "kaminari", "~> 1.2"
+
+gem "jsonapi-serializer", "~> 2.2"

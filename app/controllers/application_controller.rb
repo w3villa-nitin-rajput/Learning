@@ -5,15 +5,15 @@ class ApplicationController < ActionController::API
   private
 
   def authorize_request
-    # This looks for the "Authorization" header
     header = request.headers['Authorization']
     header = header.split(' ').last if header
     
     begin
+      raise JWT::DecodeError, 'Missing token' unless header.present?
       @decoded = JwtService.decode(header)
       @current_user = User.find(@decoded[:user_id])
-    rescue ActiveRecord::RecordNotFound, JWT::DecodeError
-      render json: { errors: 'Unauthorized' }, status: :unauthorized
+    rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
+      render json: { errors: e.message }, status: :unauthorized
     end
   end
 end

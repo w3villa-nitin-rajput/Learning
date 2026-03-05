@@ -69,7 +69,7 @@ def get_user_profile
   user = User.find_by(id: @current_user.id)
   puts "user: #{user}"
   if user
-    render json: user
+    render json: ::UserSerializer.new(user).serializable_hash[:data][:attributes].merge(id: user.id)
   else
     render json: { error: "User not found" }, status: :not_found
   end

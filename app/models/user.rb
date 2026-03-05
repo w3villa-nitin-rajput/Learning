@@ -3,6 +3,9 @@ class User < ApplicationRecord
 
   enum :role, { user: 0, admin: 1 }
 
+  has_many :orders, dependent: :destroy
+  has_many :cart_items, dependent: :destroy
+
   before_create :set_default_role
 
   validates :email, presence: true, uniqueness: true

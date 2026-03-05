@@ -1,4 +1,5 @@
 class SocialAuthController < ApplicationController
+  skip_before_action :authorize_request
   def callback
     auth = request.env["omniauth.auth"]
 
@@ -21,6 +22,6 @@ class SocialAuthController < ApplicationController
     end
 
     token = JwtService.encode(user_id: user.id)
-    redirect_to "#{ENV['FRONTEND_URL']}/home?token=#{token}"
+    redirect_to "#{ENV['FRONTEND_URL']}/?token=#{token}", allow_other_host: true
   end
 end
