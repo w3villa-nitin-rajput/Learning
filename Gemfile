@@ -38,7 +38,7 @@ gem "jwt", "~> 2.8"
 gem "dotenv-rails", groups: [ :development, :test ]
 
 gem "omniauth", "~> 2.1.0"
-gem "omniauth-google-oauth2", "~> 1.1.1"
+gem "omniauth-google-oauth2", "~> 1.2.2"
 gem "omniauth-facebook", "~> 9.0.0"
 
 # For API-only apps, you might also need:
