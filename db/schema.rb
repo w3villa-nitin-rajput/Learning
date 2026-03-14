@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_063618) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_115335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,6 +46,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_063618) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "plans", force: :cascade do |t|
+    t.string "benefit"
+    t.string "border_color"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "duration_hours"
+    t.string "name"
+    t.string "plan_type"
+    t.boolean "popular"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "stripe_price_id"
+    t.string "text_color"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", null: false
@@ -72,11 +88,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_063618) do
     t.decimal "longitude"
     t.string "name"
     t.string "password_digest"
+    t.integer "plan"
+    t.datetime "plan_expires_at"
+    t.bigint "plan_id"
     t.integer "role"
     t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_users_on_plan_id"
   end
 
   add_foreign_key "cart_items", "products"
   add_foreign_key "cart_items", "users"
   add_foreign_key "orders", "users"
+  add_foreign_key "users", "plans"
 end

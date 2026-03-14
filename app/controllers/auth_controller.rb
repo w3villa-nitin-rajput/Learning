@@ -65,7 +65,6 @@ def resend_verification_email
 end
 
 def get_user_profile
-  puts "@current_user: #{@current_user}"
   user = User.find_by(id: @current_user.id)
   puts "user: #{user}"
   if user

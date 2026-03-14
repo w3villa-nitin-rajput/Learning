@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
-  skip_before_action :authorize_request, only: [:index]
-  before_action :authorize_admin!, except: [:index]
+  skip_before_action :authorize_request, only: [:index, :show]
+  before_action :set_current_user, only: [:index, :show]
+  before_action :authorize_admin!, except: [:index, :show]
 
 def index
   # 2. Start with a base scope
@@ -17,10 +18,30 @@ def index
   @products = @products.page(page).per(per_page)
 
   render json: {
-    products: ::ProductSerializer.new(@products).serializable_hash[:data].map { |p| p[:attributes].merge(id: p[:id]) },
-    meta: pagination_meta(@products)
-  }
+  products: @products.map { |product| 
+    # Use the serializer for standard fields
+    data = ::ProductSerializer.new(product).serializable_hash[:data][:attributes]
+    
+    # Add the ID and the dynamic price without hitting the DB again
+    data.merge(
+      id: product.id,
+      discounted_price: product.price_for_user(@current_user)
+    )
+  },
+  meta: pagination_meta(@products)
+}
 end
+
+  def show
+    product = Product.find(params[:id])
+    data = ::ProductSerializer.new(product).serializable_hash[:data][:attributes]
+    render json: data.merge(
+      id: product.id,
+      discounted_price: product.price_for_user(@current_user)
+    )
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Product not found' }, status: :not_found
+  end
 
   def create
     product = Product.new(product_params)

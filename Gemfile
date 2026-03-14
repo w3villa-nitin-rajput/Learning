@@ -64,3 +64,9 @@ end
 gem "kaminari", "~> 1.2"
 
 gem "jsonapi-serializer", "~> 2.2"
+
+gem "stripe", "~> 18.4"
+
+gem "prawn", "~> 2.4"
+
+gem 'matrix'

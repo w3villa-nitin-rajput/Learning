@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "plans/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -17,16 +18,27 @@ Rails.application.routes.draw do
   get "/auth/:provider/callback", to: "social_auth#callback"
 
   put "/profile", to: "profiles#update"
+  get "/profile/download", to: "profiles#download"
   get "/cloudinary/signature", to: "cloudinary#signature"
 
   # Public API
   resources :categories, only: [:index]
-  resources :products, only: [:index]
+  resources :products, only: [:index, :show]
+  resources :plans, only: [:index]
 
   # Cart API
   get "/get-cart", to: "carts#index"
   post "/cart/add", to: "carts#add"
   post "/cart/update", to: "carts#update"
+  
+  # Orders API
+  resources :orders, only: [:index] do
+    post :checkout, on: :collection, to: "orders#create_checkout_session"
+  end
+
+  # Subscription API
+  post "/subscribe", to: "subscriptions#create"
+  post "/subscriptions/webhook", to: "subscriptions#webhook"
 
   # Admin API
   namespace :admin do
@@ -35,6 +47,6 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update]
   end
 
-  resources :products, only: [:index, :create, :update, :destroy]
+  resources :products, only: [:index, :show, :create, :update, :destroy]
   resources :categories, only: [:index, :create, :update, :destroy]
 end
