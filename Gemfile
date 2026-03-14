@@ -34,7 +34,7 @@ gem "image_processing", "~> 1.2"
 gem "cloudinary"
 
 gem "bcrypt", "~> 3.1.7"
-gem "jwt", "~> 2.8"
+gem "jwt", "~> 3.1"
 gem "dotenv-rails", groups: [ :development, :test ]
 
 gem "omniauth", "~> 2.1.0"
