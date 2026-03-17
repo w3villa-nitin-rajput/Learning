@@ -17,29 +17,24 @@ class AuthController < ApplicationController
   #     render json: { error: "Email could not be sent. Please check your email address." }, status: :internal_server_error
   # end 
 
-  def signup
-    # Use a transaction to ensure everything succeeds together
-    User.transaction do
-      @user = User.new(user_params)
-      
-      if @user.save
-        # If this fails, the 'User.save' above will be rolled back (deleted)
-        send_verification_email(@user)
-        
-        render json: { message: "Signup successful. Check email to verify." }, status: :created
-      else
-        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-      end
+  # app/controllers/auth_controller.rb
+def signup
+  User.transaction do
+    @user = User.new(user_params)
+    if @user.save
+      send_verification_email(@user)
+      render json: { message: "Signup successful. Check email." }, status: :created
+    else
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
-  rescue Net::SMTPAuthenticationError, Net::OpenTimeout, StandardError => e
-    # This block catches the email error specifically
-    Rails.logger.error "Email Failure: #{e.message}"
-    
-    render json: { 
-      error: "User was not created because the verification email could not be sent. Please check your email configuration.",
-      debug_error: e.message # Remove debug_error in final production
-    }, status: :internal_server_error
   end
+rescue => e
+  # THIS LINE IS CRITICAL - It forces the error into your Render Logs
+  puts "!!! EMAIL SENDING FAILED: #{e.message} !!!"
+  Rails.logger.error "Full Email Error: #{e.backtrace.first(5).join("\n")}"
+  
+  render json: { error: "Email could not be sent. Check logs." }, status: :internal_server_error
+end
 
   # Login
 def login
