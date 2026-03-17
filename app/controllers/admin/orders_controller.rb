@@ -8,12 +8,11 @@ class Admin::OrdersController < AdminController
 
     paginated_orders = orders.page(page).per(per_page)
     
-    serialized_orders = OrderSerializer.new(paginated_orders, include: [:user]).serializable_hash[:data].map do |o|
-      user_id = o[:relationships][:user][:data][:id]
-      user = paginated_orders.find { |po| po.id.to_s == user_id.to_s }.user
-      o[:attributes].merge(
-        id: o[:id],
-        user: { id: user.id, name: user.name, email: user.email }
+    serialized_orders = paginated_orders.map do |order|
+      data = OrderSerializer.new(order).serializable_hash[:data][:attributes]
+      data.merge(
+        id: order.id,
+        user: { id: order.user.id, name: order.user.name, email: order.user.email }
       )
     end
 

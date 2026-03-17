@@ -101,14 +101,18 @@ class SubscriptionsController < ApplicationController
   private
 
   def handle_checkout_completed(session)
-    type = session.metadata.type
-    user_id = session.metadata.user_id
+  # Use session.metadata['type'] instead of session.metadata.type
+  # session.metadata returns a StripeObject which acts like a Hash
+    type = session.metadata['type'] 
+    user_id = session.metadata['user_id']
+    
     user = User.find_by(id: user_id)
     return unless user
 
     if type == 'product_purchase'
       handle_product_purchase(session, user)
     else
+      # Defaulting to subscription for now
       handle_subscription(session, user)
     end
   end
