@@ -78,20 +78,24 @@ Rails.application.configure do
 
   # Eager load code (makes the app much faster in production)
   config.eager_load = true
-  Resend.api_key = ENV['RESEND_API_KEY']
 
   # Use a real logger
-  config.action_mailer.raise_delivery_errors = true # Change this to TRUE to see errors
-  config.action_mailer.delivery_method = :resend
-  
-  config.action_mailer.resend_settings = {
-    api_key: ENV['RESEND_API_KEY']
-  }
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  address:              'smtp.gmail.com',
+  port:                 2525,
+  domain:               'gmail.com',
+  user_name:            ENV['EMAIL_USER'],
+  password:             ENV['EMAIL_PASS'], # 16-character App Password
+  authentication:       :plain,
+  enable_starttls_auto: true,
+  open_timeout:         15, # Increased timeout for Render
+  read_timeout:         15
+}
 
   config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
   
-  # Set the global key as well, just in case
-  Resend.api_key = ENV['RESEND_API_KEY']
+
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
