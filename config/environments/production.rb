@@ -54,7 +54,6 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch("APP_URL") { "example.com" } }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
@@ -79,15 +78,20 @@ Rails.application.configure do
 
   # Eager load code (makes the app much faster in production)
   config.eager_load = true
+  Resend.api_key = ENV['RESEND_API_KEY']
 
   # Use a real logger
-  config.action_mailer.delivery_method = :resend  
+  config.action_mailer.raise_delivery_errors = true # Change this to TRUE to see errors
+  config.action_mailer.delivery_method = :resend
+  
   config.action_mailer.resend_settings = {
     api_key: ENV['RESEND_API_KEY']
   }
 
-  # Keep this part
-config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
+  config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
+  
+  # Set the global key as well, just in case
+  Resend.api_key = ENV['RESEND_API_KEY']
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

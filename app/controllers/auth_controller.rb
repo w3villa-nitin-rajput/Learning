@@ -21,21 +21,35 @@ class AuthController < ApplicationController
 def signup
   User.transaction do
     @user = User.new(user_params)
+    
     if @user.save
+      # 1. Check for API Key BEFORE trying to send
+      if ENV['RESEND_API_KEY'].blank?
+        puts "!!! ERROR: RESEND_API_KEY is missing from environment !!!"
+        raise "Missing API Key" 
+      end
+
+      # 2. Attempt to send
       send_verification_email(@user)
+      
       render json: { message: "Signup successful. Check email." }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 rescue => e
-  # THIS LINE IS CRITICAL - It forces the error into your Render Logs
-  puts "!!! EMAIL SENDING FAILED: #{e.message} !!!"
-  puts "DEBUG: API Key present? #{ENV['RESEND_API_KEY']&.first(5)}..."
-  Rails.logger.error "Full Email Error: #{e.backtrace.first(5).join("\n")}"
+  # This catches the "Missing API Key" raise OR any SMTP/Resend errors
+  puts "****************************************"
+  puts "!!! SIGNUP/EMAIL FAILURE !!!"
+  puts "Error: #{e.message}"
+  puts "****************************************"
   
-  render json: { error: "Email could not be sent. Check logs." }, status: :internal_server_error
+  render json: { 
+    error: "Signup failed: #{e.message}. Please contact support or check server logs." 
+  }, status: :internal_server_error
 end
+
+
 
   # Login
 def login
