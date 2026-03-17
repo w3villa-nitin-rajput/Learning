@@ -18,17 +18,28 @@ class AuthController < ApplicationController
   # end 
 
   def signup
-    user = User.create(user_params)
-    if user.persisted?
-      # REMOVE the begin/rescue block temporarily
-      # or just call this directly:
-      send_verification_email(user) 
+    # Use a transaction to ensure everything succeeds together
+    User.transaction do
+      @user = User.new(user_params)
       
-      render json: { message: "Signup successful. Check email." }, status: :created
-    else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      if @user.save
+        # If this fails, the 'User.save' above will be rolled back (deleted)
+        send_verification_email(@user)
+        
+        render json: { message: "Signup successful. Check email to verify." }, status: :created
+      else
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
     end
-end
+  rescue Net::SMTPAuthenticationError, Net::OpenTimeout, StandardError => e
+    # This block catches the email error specifically
+    Rails.logger.error "Email Failure: #{e.message}"
+    
+    render json: { 
+      error: "User was not created because the verification email could not be sent. Please check your email configuration.",
+      debug_error: e.message # Remove debug_error in final production
+    }, status: :internal_server_error
+  end
 
   # Login
 def login
