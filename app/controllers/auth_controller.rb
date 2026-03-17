@@ -3,19 +3,32 @@ class AuthController < ApplicationController
 
 
   # Standard Signup
+  # def signup
+  #   User.transaction do
+  #     @user = User.new(user_params)
+  #     if @user.save
+  #       send_verification_email(@user)
+  #       render json: { message: "Signup successful. Check email." }, status: :created
+  #     else
+  #       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+  #     end
+  #   end
+  #   rescue StandardError => e
+  #     render json: { error: "Email could not be sent. Please check your email address." }, status: :internal_server_error
+  # end 
+
   def signup
-    User.transaction do
-      @user = User.new(user_params)
-      if @user.save
-        send_verification_email(@user)
-        render json: { message: "Signup successful. Check email." }, status: :created
-      else
-        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-      end
+    user = User.create(user_params)
+    if user.persisted?
+      # REMOVE the begin/rescue block temporarily
+      # or just call this directly:
+      send_verification_email(user) 
+      
+      render json: { message: "Signup successful. Check email." }, status: :created
+    else
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
-    rescue StandardError => e
-      render json: { error: "Email could not be sent. Please check your email address." }, status: :internal_server_error
-  end 
+end
 
   # Login
 def login
