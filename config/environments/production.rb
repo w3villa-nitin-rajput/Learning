@@ -80,18 +80,21 @@ Rails.application.configure do
   config.eager_load = true
 
   # Use a real logger
-config.action_mailer.delivery_method = :smtp
-config.action_mailer.smtp_settings = {
-  address:              'smtp.gmail.com',
-  port:                 587,
-  domain:               'gmail.com',
-  user_name:            ENV['EMAIL_USER'],
-  password:             ENV['EMAIL_PASS'], # 16-character App Password
-  authentication:       :plain,
-  enable_starttls_auto: true,
-  open_timeout:         15, # Increased timeout for Render
-  read_timeout:         15
-}
+# Brevo SMTP Configuration
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true # Let's see errors if they happen!
+
+  config.action_mailer.smtp_settings = {
+    address:              'smtp-relay.brevo.com',
+    port:                 587,
+    user_name:            ENV['BREVO_USER'],
+    password:             ENV['BREVO_PASS'],
+    authentication:       :login,
+    enable_starttls_auto: true,
+    open_timeout:         15,
+    read_timeout:         15
+  }
 
   config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
   
