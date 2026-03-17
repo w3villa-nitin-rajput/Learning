@@ -81,8 +81,8 @@ end
   end
 
   def send_verification_email(user)
-  payload = { email: user.email, exp: 1.day.from_now.to_i }
-  token = JwtService.encode(payload)
-  VerificationMailer.verify(user, token).deliver_later
-end
+    payload = { email: user.email, exp: 1.day.from_now.to_i }
+    token = JwtService.encode(payload)
+    VerificationMailer.verify(user, token).deliver_now
+  end
 end
