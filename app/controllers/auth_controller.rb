@@ -31,6 +31,7 @@ def signup
 rescue => e
   # THIS LINE IS CRITICAL - It forces the error into your Render Logs
   puts "!!! EMAIL SENDING FAILED: #{e.message} !!!"
+  puts "DEBUG: API Key present? #{ENV['RESEND_API_KEY']&.first(5)}..."
   Rails.logger.error "Full Email Error: #{e.backtrace.first(5).join("\n")}"
   
   render json: { error: "Email could not be sent. Check logs." }, status: :internal_server_error
