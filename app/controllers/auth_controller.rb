@@ -4,15 +4,18 @@ class AuthController < ApplicationController
 
   # Standard Signup
   def signup
-    user = User.create(user_params)
-
-    if user.persisted?
-      send_verification_email(user)
-      render json: { message: "Signup successful. Check email to verify." }, status: :created
-    else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+    User.transaction do
+      @user = User.new(user_params)
+      if @user.save
+        send_verification_email(@user)
+        render json: { message: "Signup successful. Check email." }, status: :created
+      else
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
     end
-  end
+    rescue StandardError => e
+      render json: { error: "Email could not be sent. Please check your email address." }, status: :internal_server_error
+  end 
 
   # Login
 def login
