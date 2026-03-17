@@ -87,13 +87,13 @@ Rails.application.configure do
 
   config.action_mailer.smtp_settings = {
     address:              'smtp-relay.brevo.com',
-    port:                 587,
+    port:                 2525,
     user_name:            ENV['BREVO_USER'],
     password:             ENV['BREVO_PASS'],
     authentication:       :login,
     enable_starttls_auto: true,
-    open_timeout:         15,
-    read_timeout:         15
+    open_timeout:         30,
+    read_timeout:         30
   }
 
   config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }

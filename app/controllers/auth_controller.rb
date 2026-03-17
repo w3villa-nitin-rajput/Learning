@@ -23,13 +23,7 @@ def signup
     @user = User.new(user_params)
     
     if @user.save
-      # 1. Check for API Key BEFORE trying to send
-      if ENV['RESEND_API_KEY'].blank?
-        puts "!!! ERROR: RESEND_API_KEY is missing from environment !!!"
-        raise "Missing API Key" 
-      end
-
-      # 2. Attempt to send
+      # Attempt to send asynchronously
       send_verification_email(@user)
       
       render json: { message: "Signup successful. Check email." }, status: :created
@@ -120,6 +114,6 @@ end
   def send_verification_email(user)
     payload = { email: user.email, exp: 1.day.from_now.to_i }
     token = JwtService.encode(payload)
-    VerificationMailer.verify(user, token).deliver_now
+    VerificationMailer.verify(user, token).deliver_later
   end
 end
