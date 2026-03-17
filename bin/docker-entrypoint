@@ -1,8 +1,11 @@
 #!/bin/bash -e
 
-# db:prepare will run migrations AND seeds, 
-# but only if the database was just created.
-echo "Preparing database (migrate + seed if new)..."
-./bin/rails db:prepare
+echo "Running migrations..."
+./bin/rails db:migrate
+
+# This forces seeds to run every time. 
+# Ensure your seeds.rb uses find_or_create_by to avoid duplicates!
+echo "Running seeds..."
+./bin/rails db:seed
 
 exec "${@}"
