@@ -81,22 +81,13 @@ Rails.application.configure do
   config.eager_load = true
 
   # Use a real logger
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true # Set to true to see errors in Render logs
-
-  config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    domain:               'gmail.com',       # Fix 1: Use gmail.com, not onrender.com
-    user_name:            ENV['EMAIL_USER'],
-    password:             ENV['EMAIL_PASS'],
-    authentication:       :plain,            # Fix 2: Use a symbol (:plain) instead of a string
-    enable_starttls_auto: true
+  config.action_mailer.delivery_method = :resend  
+  config.action_mailer.resend_settings = {
+    api_key: ENV['RESEND_API_KEY']
   }
 
-  # This must match your production URL
-  config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
+  # Keep this part
+config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

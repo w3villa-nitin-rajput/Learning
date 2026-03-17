@@ -1,6 +1,6 @@
 # app/mailers/verification_mailer.rb
 class VerificationMailer < ApplicationMailer
-  default from: ENV["EMAIL_USER"]
+  
 
   def verify(user, token)
     @user = user

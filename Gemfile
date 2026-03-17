@@ -43,6 +43,7 @@ gem "omniauth-facebook", "~> 9.0.0"
 
 # For API-only apps, you might also need:
 gem "oauth2", "~> 2.0.9"
+gem "resend"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
