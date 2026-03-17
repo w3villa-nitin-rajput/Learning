@@ -81,20 +81,22 @@ Rails.application.configure do
   config.eager_load = true
 
   # Use a real logger
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
-
-  config.action_mailer.default_url_options = { host: "Zeptro.onrender.com" }
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true # Set to true to see errors in Render logs
+
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
-    port: 587,
-    user_name: ENV["EMAIL_USER"],
-    password: ENV["EMAIL_PASS"],
-    authentication: "plain",
+    address:              'smtp.gmail.com', # Or SendGrid/Postmark/Mailgun
+    port:                 587,
+    domain:               'onrender.com',
+    user_name:            ENV['EMAIL_USER'],
+    password:             ENV['EMAIL_PASS'],
+    authentication:       'plain',
     enable_starttls_auto: true
-}
+  }
+
+  # This must match your production URL
+  config.action_mailer.default_url_options = { host: 'learning-pax0.onrender.com' }
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
