@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
-# Run migrations every time the container starts
-echo "Applying database migrations..."
-./bin/rails db:migrate
+# db:prepare will run migrations AND seeds, 
+# but only if the database was just created.
+echo "Preparing database (migrate + seed if new)..."
+./bin/rails db:prepare
 
 exec "${@}"
