@@ -49,27 +49,25 @@ plans = [
     name: "Silver",
     plan_type: "silver",
     price: 9.99,
-    duration_hours: 720, # 30 days
+    duration_hours: 6,
     description: "Perfect for regular food enthusiasts - Get 10% discount on all products",
     benefit: "✓ Free delivery • Priority support • 10% discount on all products",
     color: "#94A3B8",
     border_color: "#64748B",
     text_color: "#FFFFFF",
     popular: false,
-    discount_percentage: 10
   },
   {
     name: "Gold",
     plan_type: "gold",
     price: 19.99,
-    duration_hours: 720, # 30 days
+    duration_hours: 12,
     description: "Ultimate experience for food connoisseurs - Get 20% discount on all products",
     benefit: "✓ Free delivery • 24/7 priority support • 20% discount on all products • Exclusive offers",
     color: "#FBBF24",
     border_color: "#B45309",
     text_color: "#1F2937",
     popular: true,
-    discount_percentage: 20
   }
 ]
 
