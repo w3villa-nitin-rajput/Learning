@@ -29,7 +29,16 @@ class SocialAuthController < ApplicationController
     end
 
     token = JwtService.encode(user_id: user.id)
-    puts "Social Auth Debug: Redirecting to #{ENV['FRONTEND_URL']}/?token=[FILTERED] for User ID=#{user.id}"
-    redirect_to "#{ENV['FRONTEND_URL']}/?token=#{token}", allow_other_host: true
+    
+    frontend_url = ENV['FRONTEND_URL'] || "http://localhost:5173"
+    # Ensure there is exactly one / between URL and ?token
+    base_url = frontend_url.chomp('/')
+    redirect_url = "#{base_url}/?token=#{token}"
+    
+    puts "Social Auth Debug: Final Redirect URL: #{redirect_url.sub(token, '[FILTERED]')}"
+    redirect_to redirect_url, allow_other_host: true
+  rescue StandardError => e
+    puts "Social Auth CRITICAL ERROR: #{e.message}\n#{e.backtrace.join("\n")}"
+    redirect_to (ENV['FRONTEND_URL'] || "http://localhost:5173"), allow_other_host: true
   end
 end

@@ -47,7 +47,8 @@ end
 
   # Login
 def login
-  user = User.find_by(email: params[:email])
+  email = params[:email].to_s.strip.downcase
+  user = User.find_by(email: email)
 
   if user&.authenticate(params[:password])
     # Add this check to enforce verification
