@@ -43,7 +43,6 @@ plans = [
     border_color: "#E5E7EB",
     text_color: "#FFFFFF",
     popular: false,
-    discount_percentage: 0
   },
   {
     name: "Silver",
