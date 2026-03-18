@@ -12,7 +12,12 @@ class ApplicationController < ActionController::API
     begin
       raise JWT::DecodeError, 'Missing token' unless header.present?
       @decoded = JwtService.decode(header)
-      @current_user = User.find(@decoded[:user_id])
+      user_id = @decoded[:user_id]
+      @current_user = User.find_by(id: user_id)
+      
+      unless @current_user
+        raise ActiveRecord::RecordNotFound, "Couldn't find User with 'id'=#{user_id} (Token might be stale after DB reset)"
+      end
     rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
       puts "AUTHORIZATION ERROR for #{request.path}: #{e.message}" # DEBUG
       render json: { errors: e.message }, status: :unauthorized
