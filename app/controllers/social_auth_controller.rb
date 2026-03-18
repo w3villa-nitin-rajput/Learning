@@ -3,14 +3,14 @@ class SocialAuthController < ApplicationController
   def callback
     auth = request.env["omniauth.auth"]
 
-    email = auth.info.email
+    email = auth.info.email.downcase
     provider = auth.provider
     uid = auth.uid
 
     user = User.find_by(email: email)
 
     if user
-      user.update("#{provider}_uid": uid)
+      user.update("#{provider}_uid": uid, email_verified: true)
     else
       user = User.create!(
         name: auth.info.name,

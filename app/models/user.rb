@@ -8,9 +8,10 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :cart_items, dependent: :destroy
 
+  before_validation :downcase_email
   before_create :set_default_role
 
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :password, presence: true, length: { minimum: 6 }, on: :create
 
   def active_plan_name
@@ -23,5 +24,11 @@ class User < ApplicationRecord
 
   def set_default_role
     self.role ||= :user
+  end
+
+  private
+
+  def downcase_email
+    self.email = email.downcase if email.present?
   end
 end
