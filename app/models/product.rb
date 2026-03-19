@@ -14,17 +14,17 @@ class Product < ApplicationRecord
   }
 
   def price_for_user(user)
-    return price unless user
+    return offer_price unless user
 
     tier = user.active_plan_name # This will now return :gold, :silver, or :free
 
     case tier
     when :gold
-      (price * 0.8).round(2)
+      (offer_price * 0.8).round(2)
     when :silver
-      (price * 0.9).round(2)
+      (offer_price * 0.9).round(2)
     else
-      price
+      offer_price
     end
   end
 
