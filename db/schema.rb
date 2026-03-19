@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_16_093221) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_19_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,11 +26,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_093221) do
 
   create_table "categories", force: :cascade do |t|
     t.string "bg_color"
+    t.string "cloudinary_public_id"
+    t.string "cloudinary_url"
     t.datetime "created_at", null: false
     t.string "image_url"
     t.string "name"
     t.string "path"
     t.datetime "updated_at", null: false
+    t.index ["cloudinary_public_id"], name: "index_categories_on_cloudinary_public_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -64,6 +67,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_093221) do
 
   create_table "products", force: :cascade do |t|
     t.string "category", null: false
+    t.string "cloudinary_public_id"
+    t.string "cloudinary_url"
     t.datetime "created_at", null: false
     t.string "description", default: [], array: true
     t.string "image_urls", default: [], array: true
@@ -73,6 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_093221) do
     t.decimal "price", precision: 10, scale: 2, null: false
     t.datetime "updated_at", null: false
     t.index ["category"], name: "index_products_on_category"
+    t.index ["cloudinary_public_id"], name: "index_products_on_cloudinary_public_id"
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|

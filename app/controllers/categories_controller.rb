@@ -18,7 +18,14 @@ class CategoriesController < ApplicationController
 
   def update
     category = Category.find(params[:id])
+    old_public_id = category.cloudinary_public_id
+
     if category.update(category_params)
+      # Delete old image if a new one was uploaded
+      if category_params[:cloudinary_public_id].present? && old_public_id.present? && old_public_id != category_params[:cloudinary_public_id]
+        category.delete_old_cloudinary_image
+      end
+
       render json: CategorySerializer.new(category).serializable_hash[:data][:attributes].merge(id: category.id)
     else
       render json: { errors: category.errors.full_messages }, status: :unprocessable_entity
@@ -27,6 +34,12 @@ class CategoriesController < ApplicationController
 
   def destroy
     category = Category.find(params[:id])
+
+    # Delete image from Cloudinary before destroying category
+    if category.cloudinary_public_id.present?
+      category.delete_old_cloudinary_image
+    end
+
     category.destroy
     head :no_content
   end
@@ -65,6 +78,6 @@ class CategoriesController < ApplicationController
   end
 
   def category_params
-    params.require(:category).permit(:name, :path, :image_url, :bg_color)
+    params.require(:category).permit(:name, :path, :image_url, :bg_color, :cloudinary_url, :cloudinary_public_id)
   end
 end
