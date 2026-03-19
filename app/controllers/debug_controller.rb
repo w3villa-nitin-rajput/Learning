@@ -1,13 +1,13 @@
 class DebugController < ApplicationController
-  skip_before_action :authorize_request, only: [:health]
-  before_action :authorize_request, except: [:health]
+  skip_before_action :authorize_request, only: [ :health ]
+  before_action :authorize_request, except: [ :health ]
 
   def health
-    render json: { 
-      status: 'ok',
+    render json: {
+      status: "ok",
       environment: Rails.env,
       timestamp: Time.current,
-      solid_queue_in_puma: ENV.fetch('SOLID_QUEUE_IN_PUMA', 'not set')
+      solid_queue_in_puma: ENV.fetch("SOLID_QUEUE_IN_PUMA", "not set")
     }
   end
 
@@ -21,7 +21,7 @@ class DebugController < ApplicationController
         authenticated: @current_user.present?
       },
       token_decoded: @decoded.inspect,
-      authorization_header: request.headers['Authorization'].present? ? 'present' : 'missing'
+      authorization_header: request.headers["Authorization"].present? ? "present" : "missing"
     }
   end
 
@@ -29,9 +29,9 @@ class DebugController < ApplicationController
     puts "[DEBUG] Testing admin authorization"
     puts "[DEBUG]   Current user: #{@current_user&.email}"
     puts "[DEBUG]   Is admin: #{@current_user&.admin?}"
-    
+
     render json: {
-      message: 'Admin access successful',
+      message: "Admin access successful",
       user: {
         id: @current_user.id,
         email: @current_user.email,
@@ -45,9 +45,9 @@ class DebugController < ApplicationController
     user = @current_user
     render json: {
       cloudinary_config: {
-        cloud_name: ENV.fetch('CLOUDINARY_CLOUD_NAME', 'not set'),
-        api_key_present: ENV.fetch('CLOUDINARY_API_KEY', '').present?,
-        api_secret_present: ENV.fetch('CLOUDINARY_API_SECRET', '').present?
+        cloud_name: ENV.fetch("CLOUDINARY_CLOUD_NAME", "not set"),
+        api_key_present: ENV.fetch("CLOUDINARY_API_KEY", "").present?,
+        api_secret_present: ENV.fetch("CLOUDINARY_API_SECRET", "").present?
       },
       user_image_data: {
         cloudinary_url: user.cloudinary_url,
@@ -55,10 +55,10 @@ class DebugController < ApplicationController
         image_present: user.cloudinary_url.present?
       },
       cors_config: {
-        frontend_url: ENV.fetch('FRONTEND_URL', 'not set'),
+        frontend_url: ENV.fetch("FRONTEND_URL", "not set"),
         allowed_origins: [
-          'http://localhost:5173',
-          ENV.fetch('FRONTEND_URL', '').delete_suffix('/') if ENV["FRONTEND_URL"].present?
+          "http://localhost:5173",
+          ENV["FRONTEND_URL"].present? ? ENV["FRONTEND_URL"].delete_suffix("/") : nil
         ].compact
       },
       test_cloudinary_url: "https://res.cloudinary.com/#{ENV['CLOUDINARY_CLOUD_NAME']}/image/upload/sample.jpg"
