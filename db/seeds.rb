@@ -32,7 +32,8 @@ admin = User.create!(
   name: "Admin",
   email: "admin@example.com",
   password: "password123",
-  role: "admin"
+  role: 1,
+  email_verified: true
 )
 
 puts "Admin created: #{admin.email}"
