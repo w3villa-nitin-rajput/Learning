@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-echo "Running migrations..."
-./bin/rails db:migrate
+echo "Running migrations for all databases..."
+./bin/rails db:prepare
 
 # This forces seeds to run every time. 
 # Ensure your seeds.rb uses find_or_create_by to avoid duplicates!

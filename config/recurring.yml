@@ -1,3 +1,7 @@
+# Solid Queue Recurring Jobs Configuration
+# These jobs will run on the schedule specified below
+# The schedule format supports: every X (minute|hour|day|week|month), at HH:mm, combinations of the above
+
 # examples:
 #   periodic_cleanup:
 #     class: CleanSoftDeletedRecordsJob
@@ -10,14 +14,20 @@
 #     schedule: at 5am every day
 
 production:
+  # Check for expired subscription plans every minute and downgrade users to free plan
   expire_plans:
     class: ExpirePlansJob
+    queue: default
     schedule: every minute
+  
+  # Clean up finished jobs from the queue every hour at minute 12
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
 
 development:
+  # Check for expired subscription plans every minute in development
   expire_plans:
     class: ExpirePlansJob
+    queue: default
     schedule: every minute
