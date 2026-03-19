@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
-  skip_before_action :authorize_request, only: [:index]
-  before_action :authorize_admin!, except: [:index]
+  skip_before_action :authorize_request, only: [ :index ]
+  before_action :authorize_admin!, except: [ :index ]
 
   def index
     categories = Category.all.order(:id)
@@ -34,9 +34,34 @@ class CategoriesController < ApplicationController
   private
 
   def authorize_admin!
-    unless @current_user&.admin?
-      render json: { error: 'Unauthorized: Admin access required' }, status: :forbidden
+    puts "[ADMIN AUTH] Checking admin access for user: #{@current_user&.id}"
+    puts "[ADMIN AUTH] @current_user.present?: #{@current_user.present?}"
+    puts "[ADMIN AUTH] @current_user.admin?: #{@current_user&.admin?}"
+    puts "[ADMIN AUTH] @current_user role: #{@current_user&.role}"
+
+    unless @current_user.present?
+      puts "[ADMIN AUTH] ✗ User not authenticated"
+      render json: {
+        error: "User not authenticated",
+        status: "unauthorized",
+        message: "No authenticated user found"
+      }, status: :unauthorized
+      return
     end
+
+    unless @current_user.admin?
+      puts "[ADMIN AUTH] ✗ User is not admin (role: #{@current_user.role})"
+      render json: {
+        error: "Unauthorized: Admin access required",
+        user_id: @current_user.id,
+        user_email: @current_user.email,
+        user_role: @current_user.role,
+        status: "forbidden",
+        message: "User #{@current_user.email} is not an admin"
+      }, status: :forbidden
+      return
+    end
+    puts "[ADMIN AUTH] ✓ Admin access granted for #{@current_user.email}"
   end
 
   def category_params
