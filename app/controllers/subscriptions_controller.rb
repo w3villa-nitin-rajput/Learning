@@ -154,7 +154,6 @@ class SubscriptionsController < ApplicationController
         shipping_address: shipping_address || user.address || "No address provided",
         payment_method: "Stripe",
         payment_status: "Paid",
-        status: :confirmed
       )
 
       # 2. Clear Cart
