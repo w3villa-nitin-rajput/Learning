@@ -6,6 +6,7 @@ class SubscriptionsController < ApplicationController
   # POST /subscribe
   def create
     plan_id = params[:plan]
+    
     plan = Plan.find_by(id: plan_id)
     puts "#{plan}"
 

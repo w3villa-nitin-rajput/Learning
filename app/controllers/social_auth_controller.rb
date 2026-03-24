@@ -3,9 +3,15 @@ class SocialAuthController < ApplicationController
   def callback
     auth = request.env["omniauth.auth"]
 
-    email = auth.info.email.strip.downcase
+    email = auth.info.email&.strip&.downcase
     provider = auth.provider
     uid = auth.uid
+
+    unless email
+      frontend_url = ENV['FRONTEND_URL'] || "http://localhost:5173"
+      redirect_to "#{frontend_url.chomp('/')}/?error=email_required", allow_other_host: true
+      return
+    end
 
     puts "Social Auth Debug: Provider=#{provider}, UID=#{uid}, Email=#{email}"
 
