@@ -33,7 +33,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 gem "cloudinary"
 
-gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.22"
 gem "jwt", "~> 2.8"
 gem "dotenv-rails", groups: [ :development, :test ]
 
